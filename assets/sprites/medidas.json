@@ -1,0 +1,72 @@
+{
+  "alberto": {
+    "ancho": 256,
+    "alto": 256,
+    "quieto": 0
+  },
+  "alvaro": {
+    "ancho": 256,
+    "alto": 255,
+    "quieto": 0
+  },
+  "bugarin": {
+    "ancho": 256,
+    "alto": 252,
+    "quieto": 0
+  },
+  "catala": {
+    "ancho": 256,
+    "alto": 256,
+    "quieto": 2
+  },
+  "chaves": {
+    "ancho": 256,
+    "alto": 256,
+    "quieto": 3
+  },
+  "chema": {
+    "ancho": 256,
+    "alto": 256,
+    "quieto": 2
+  },
+  "ferrin": {
+    "ancho": 256,
+    "alto": 256,
+    "quieto": 1
+  },
+  "fosil": {
+    "ancho": 256,
+    "alto": 256,
+    "quieto": 2
+  },
+  "julian": {
+    "ancho": 256,
+    "alto": 256,
+    "quieto": 2
+  },
+  "loreto": {
+    "ancho": 256,
+    "alto": 256,
+    "quieto": 0
+  },
+  "mucientes": {
+    "ancho": 256,
+    "alto": 256,
+    "quieto": 0
+  },
+  "pabloquesada": {
+    "ancho": 256,
+    "alto": 256,
+    "quieto": 2
+  },
+  "pet": {
+    "ancho": 256,
+    "alto": 256,
+    "quieto": 0
+  },
+  "viqueira": {
+    "ancho": 256,
+    "alto": 256,
+    "quieto": 0
+  }
+}
