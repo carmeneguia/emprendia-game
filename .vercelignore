@@ -1,0 +1,5 @@
+# Archivos que no hacen falta en la web publicada
+assets/sprites/originales
+assets/sprites/*.zip
+herramientas
+servir.py
