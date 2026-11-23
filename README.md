@@ -14,7 +14,9 @@ Abre http://localhost:8080 en el navegador.
 |---|---|
 | ← → (o A / D) | Andar · con SHIFT, correr |
 | ↑ (o W) | Saltar |
-| ESPACIO | Superpoder del personaje |
+| ↓ (o S) | Agacharse (caja de choque más baja; andas despacio) |
+| RATÓN | Apuntar el superpoder (disparo guiado hacia la mira) |
+| ESPACIO o CLIC IZQUIERDO | Superpoder del personaje |
 | R | Reiniciar nivel |
 | ESC | Volver al menú |
 | F2 | (equipo) Completar el nivel al instante |

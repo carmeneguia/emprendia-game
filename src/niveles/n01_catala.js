@@ -127,7 +127,7 @@ export function nivelCatala(indice) {
     },
   }]);
 
-  k.onKeyRelease("space", () => {
+  const soltarBola = () => {
     if (!cargando) return;
     cargando = false;
     const p = kit.jugador;
@@ -142,7 +142,10 @@ export function nivelCatala(indice) {
     bola.vel = vectorSalida();
     bola.onUpdate(() => (bola.angle += 540 * bola.dir * k.dt()));
     if (bolas <= 0) k.wait(4.6, () => { if (derribados < 10) kit.fallar("¡Te has quedado sin bolas!"); });
-  });
+  };
+  // se suelta al dejar de pulsar ESPACIO o el botón del ratón
+  k.onKeyRelease("space", soltarBola);
+  k.onMouseRelease("left", soltarBola);
 
   k.onCollide("bola", "bolo", (bola, b) => {
     if (b.caido) return;

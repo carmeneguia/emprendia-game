@@ -26,7 +26,8 @@ export function montarNivel(cfg) {
   const kit = {
     indice,
     personaje: id,
-    vidas: cfg.vidas ?? 3,
+    // vidas base del nivel + 1 por cada nivel ya superado
+    vidas: (cfg.vidas ?? 3) + (estado.vidasExtra ?? 0),
     metaAbierta: cfg.metaAbierta ?? true,
     resbaladizo: !!cfg.resbaladizo,
     modoJefe: false,
@@ -145,7 +146,7 @@ export function montarNivel(cfg) {
     caja.hidden = !kit.info;
     if (kit.info) caja.height = Math.max(58, info.height + 22);
   });
-  const ayuda = rotulo("← → mover · SHIFT correr · ↑ saltar · ESPACIO superpoder · R reiniciar · ESC menú", { pos: k.vec2(ANCHO / 2, ALTO - 16), tam: 13, color: [230, 230, 245], fijo: true, z: 100, sombra: 2 });
+  const ayuda = rotulo("← → mover · ↑ saltar · ↓ agacharse · RATÓN apuntar · CLIC/ESPACIO superpoder · R reiniciar · ESC menú", { pos: k.vec2(ANCHO / 2, ALTO - 16), tam: 13, color: [230, 230, 245], fijo: true, z: 100, sombra: 2 });
   k.wait(9, () => k.tween(1, 0, 1, (v) => (ayuda.opacity = v)));
 
   kit.aviso = (texto, color = [255, 255, 255], dur = 1.6) => {
@@ -225,6 +226,12 @@ export function montarNivel(cfg) {
     kit.terminado = true;
     p.bloqueado = true;
     desbloquear(id);
+    // pasar de fase da una vida más (solo la primera vez que se supera cada nivel)
+    if (indice >= estado.siguiente) {
+      estado.vidasExtra = (estado.vidasExtra ?? 0) + 1;
+      kit.vidas++;
+      kit.aviso("¡+1 VIDA!", [255, 110, 130], 0.7);
+    }
     estado.siguiente = Math.max(estado.siguiente, indice + 1);
     guardar();
     chispas(p.pos.add(0, -40), [255, 220, 90], 24);

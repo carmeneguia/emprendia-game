@@ -268,6 +268,9 @@ export function registrarJefe() {
       destello(COLOR, 0.6);
       chispas(M.pos.add(0, -100), COLOR, 30);
       cartelGrande(fase === 2 ? "FASE 2" : "FASE 3", fase === 2 ? "¡Armadura de combate! Ahora embiste con la espada" : "¡FURIA! Lluvia de misiles y refuerzos", COLOR, 1.3);
+      // pasar de fase da una vida más
+      kit.vidas++;
+      flotante("+1 VIDA", p.pos.add(0, -100), [255, 110, 130], 22);
     }
 
     // ================= ATAQUES DE MUCIENTES =================
@@ -515,13 +518,13 @@ export function registrarJefe() {
         titulo: "Nivel 11 · Batalla final",
         subtitulo: `${PERSONAJES[id].nombre} contra Mucientes y Chema`,
         puntos: [
-          "Dispara a MUCIENTES (ESPACIO sale en diagonal; mantén ↑ para disparar recto arriba). Tiene 3 fases y cada una añade ataques nuevos.",
+          "Dispara a MUCIENTES apuntando con el RATÓN (CLIC o ESPACIO). Tiene 3 fases y cada una añade ataques nuevos.",
           "CHEMA gira a su alrededor. Si le das, despliega su ESCUDO y te devuelve el disparo: apunta cuando no esté delante.",
           "Todos los ataques avisan antes: recuadro rojo (sal de él antes del láser), línea roja (va a embestir: aléjate y SALTA la onda del suelo), miras rojas en el suelo (misiles).",
           "Tras embestir, Mucientes se queda ATURDIDO unos segundos: ¡es tu momento! Recibe el doble de daño.",
-          "Tienes 5 vidas. M = silenciar el sonido.",
+          `Tienes ${kit.vidas} vidas y ganas 1 más cada vez que Mucientes cambia de fase. ↓ para agacharte. M = silenciar el sonido.`,
         ],
-        controles: [["← + →", "Moverse"], ["↑", "Saltar"], ["ESPACIO", "Disparar"], ["↑ + ESPACIO", "Recto arriba"]],
+        controles: [["← + →", "Moverse"], ["↑", "Saltar"], ["↓", "Agacharse"], ["RATÓN", "Apuntar"], ["CLIC", "Disparar"]],
       });
       // Mucientes desciende
       animM("volar");

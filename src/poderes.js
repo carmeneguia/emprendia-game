@@ -6,13 +6,33 @@ import { k } from "./k.js";
 
 // altura (desde los pies) a la que salen los proyectiles
 export const ALTURA_DISPARO = 36;
+// altura del disparo cuando el jugador está agachado
+export const ALTURA_DISPARO_AGACHADO = 22;
+
+export const alturaDisparo = (p) => (p.agachado ? ALTURA_DISPARO_AGACHADO : ALTURA_DISPARO);
+
+// Disparo guiado con el ratón: devuelve la dirección (vector unitario) desde el jugador
+// hasta el puntero, en coordenadas del mundo, y gira al personaje hacia ese lado.
+export function apuntar(p) {
+  const desde = p.pos.add(0, -alturaDisparo(p));
+  let d = k.toWorld(k.mousePos()).sub(desde);
+  if (d.len() < 1) d = k.vec2(p.dir, 0);
+  d = d.unit();
+  if (Math.abs(d.x) > 0.05) {
+    p.dir = Math.sign(d.x);
+    p.mirar?.(p.dir);
+  }
+  return d;
+}
 
 function proyectil(p, o) {
   const {
     sprite, tam = [24, 24], velocidad = 520, vida = 1, etiqueta, texto, colorTexto = [255, 255, 255],
-    gravedad = false, salto = 0, atraviesa = false, dirV = null, girar = 0,
+    gravedad = false, salto = 0, atraviesa = false, girar = 0,
   } = o;
-  const origen = p.pos.add(p.dir * 26, -ALTURA_DISPARO);
+  // todos los disparos van hacia donde apunta el ratón
+  const dirV = o.dirV ?? apuntar(p);
+  const origen = p.pos.add(0, -alturaDisparo(p)).add(dirV.scale(26));
   const comps = [
     k.pos(origen),
     k.sprite(sprite, { width: tam[0], height: tam[1], flipX: p.dir < 0 }),
@@ -31,12 +51,17 @@ function proyectil(p, o) {
   if (gravedad) comps.push(k.body());
   const obj = k.add(comps);
   if (texto) obj.add([k.text(texto, { size: 11 }), k.anchor("center"), k.color(...colorTexto)]);
-  if (gravedad && salto) obj.jump(salto);
-  const v = dirV ?? k.vec2(p.dir, 0);
-  // en diagonal: girar el dibujo hacia donde va
-  if (dirV && !girar) obj.angle = (Math.atan2(v.y, v.x) * 180) / Math.PI - (p.dir < 0 ? 180 : 0);
+  const v = dirV;
+  if (gravedad) {
+    // tiro parabólico: sale en la dirección apuntada y la gravedad hace el resto
+    obj.jump(salto * (1 - Math.abs(v.y)) - v.y * velocidad);
+  } else if (!girar) {
+    // girar el dibujo hacia donde va
+    obj.angle = (Math.atan2(v.y, v.x) * 180) / Math.PI - (p.dir < 0 ? 180 : 0);
+  }
   obj.onUpdate(() => {
-    obj.move(v.scale(velocidad));
+    if (gravedad) obj.move(v.x * velocidad, 0);
+    else obj.move(v.scale(velocidad));
     if (girar) obj.angle += girar * p.dir * k.dt();
   });
   return obj;
@@ -60,8 +85,9 @@ export const PODERES = {
     return 0.35;
   },
   bases(kit, p) {
+    apuntar(p); // el martillo golpea hacia el lado del ratón
     const m = k.add([
-      k.pos(p.pos.add(p.dir * 22, -12)),
+      k.pos(p.pos.add(p.dir * 22, p.agachado ? 0 : -12)),
       k.sprite("t_martillo", { width: 92, height: 58, flipX: p.dir < 0 }),
       k.rotate(-30 * p.dir),
       k.anchor("center"),
@@ -109,7 +135,7 @@ export const PODERES = {
   },
 };
 
-// En la batalla final todos disparan en diagonal hacia arriba (o recto arriba si mantienes ↑),
+// En la batalla final todos disparan hacia el ratón,
 // cada uno con el aspecto de su ataque.
 const ASPECTO_JEFE = {
   catala: { sprite: "t_bola", tam: [32, 32], girar: 540 },
@@ -128,8 +154,7 @@ const ASPECTO_JEFE = {
 export function usarSuperpoder(kit, p) {
   if (kit.poderPropio) return kit.poderPropio(p);
   if (kit.modoJefe) {
-    const arriba = k.isKeyDown("up") || k.isKeyDown("w");
-    const dirV = arriba ? k.vec2(0, -1) : k.vec2(p.dir, -0.7).unit();
+    const dirV = apuntar(p);
     proyectil(p, { ...(ASPECTO_JEFE[p.personaje] ?? ASPECTO_JEFE.chaves), velocidad: 640, vida: 1.6, etiqueta: "disparo_jefe", dirV });
     return 0.32;
   }

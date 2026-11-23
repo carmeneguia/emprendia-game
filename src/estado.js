@@ -3,7 +3,8 @@
 
 const CLAVE = "emprendia-partida-v1";
 
-const vacio = () => ({ desbloqueados: [], monedas: 0, objetos: [], siguiente: 0, jefeDerrotado: false });
+// vidasExtra: +1 por cada nivel superado (se suman a las vidas con las que empieza cada nivel)
+const vacio = () => ({ desbloqueados: [], monedas: 0, objetos: [], siguiente: 0, jefeDerrotado: false, vidasExtra: 0 });
 
 export const estado = cargar();
 
